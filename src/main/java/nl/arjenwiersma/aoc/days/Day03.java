@@ -25,35 +25,6 @@ public class Day03 implements Day<Integer> {
         return decimalGammaRate * decimalEpsilonRate;
     }
 
-    public int calculateDominantZeroOrOne(List<String> input, int charIndex, boolean zeroOrOne) {
-        int amountOfDom = 0;
-        int amountOfSub = 0;
-        String dom;
-
-        if(zeroOrOne){
-            dom = "1";
-        }else dom = "0";
-
-        for (String i : input) {
-            char chr = i.charAt(charIndex);
-
-            String str = String.valueOf(chr);
-            if (str.equals(dom)) {
-                amountOfDom++;
-            }else {
-                amountOfSub++;
-            }
-        }
-
-        if( (dom.equals("1")) && (amountOfDom==amountOfSub) ){
-            return 1;
-        }else if((dom.equals("0")) && (amountOfDom==amountOfSub)){
-            return 0;
-        }else if (amountOfDom > amountOfSub){
-            return Integer.parseInt(dom);
-        }else return Math.abs(Integer.parseInt(dom)-1);
-
-    }
 
     @Override
     public Integer part2(List<String> input) {
@@ -61,17 +32,50 @@ public class Day03 implements Day<Integer> {
         List<String> temp1 = new ArrayList<>(input);
         List<String> temp2 = new ArrayList<>(input);
 
-        int oxygen =  calculateOxygenAndCo2(temp1, false);
-        int co2 = calculateOxygenAndCo2(temp2, true);
+        int oxygen =  calculateOxygenAndCo2(temp1, true);
+        int co2 = calculateOxygenAndCo2(temp2, false);
 
-        System.out.println( "Oxygen: "+ oxygen +
-                            " Co2: "+ co2 );
-        return co2;
+        return oxygen*co2;
     }
+
+    public int calculateDominantZeroOrOne(List<String> input, int charIndex, boolean gas) {
+        int amountOfOxygen = 0;
+        int amountOfCo2 = 0;
+        String calculateOxygen;
+        String calculateC02;
+
+        if(gas){
+            calculateOxygen = "1";
+            calculateC02 = "0";
+        }else {
+            calculateOxygen = "0";
+            calculateC02= "1";
+        }
+
+        for (String i : input) {
+            char chr = i.charAt(charIndex);
+
+            String str = String.valueOf(chr);
+            if (str.equals(calculateOxygen)) {
+                amountOfOxygen++;
+            }else if (str.equals(calculateC02)){
+                amountOfCo2++;
+            }
+        }
+
+        if((calculateOxygen.equals("1")) && (amountOfOxygen==amountOfCo2)){
+            return 1;
+        }else if((calculateC02.equals("1")) && (amountOfOxygen==amountOfCo2)){
+            return 0;
+        }else if (amountOfOxygen > amountOfCo2){
+            return (1);
+        }else return 0;
+    }
+
 
     private int calculateOxygenAndCo2(List<String> calcList, boolean dominant) {
         int gas = 0;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 12; i++) {
 
             int dom = calculateDominantZeroOrOne(calcList, i, dominant);
             calcList = removeFromList(calcList, i, dom);
